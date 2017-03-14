@@ -23,20 +23,33 @@ public class FibonacciSumLastDigit {
         if (n <= 1)
             return n;
 
-        int previous = 0;
-        int current  = 1;
-        int sum      = 1;
+        List<Integer> pisanoPeriod = getPisanoPeriodMod10();
+        int periodSize = pisanoPeriod.size();
+        long remainder = n % periodSize;
 
-        for (long i = 0; i < n - 1; ++i) {
-            int tmp_previous = previous;
-            previous = current;
-            current = (tmp_previous + current) % 10;
-            sum = (sum + current) % 10;
+        long result = pisanoPeriod.stream().limit(remainder+1).reduce(0, (a,b) -> a + b);
+
+        return result % 10;
+    }
+
+    public static List<Integer> getPisanoPeriodMod10() {
+
+        ArrayList<Integer> F = new ArrayList<>();
+        F.add(0);
+        F.add(1);
+        F.add(1);
+        F.add(2);
+
+        int i = 4;
+        while(true) {
+            if (F.get(i-2) == 0 && F.get(i-1) == 1)
+                return F.subList(0,i-2);
+            F.add((F.get(i-1) + F.get(i-2)) % 10);
+            i++;
         }
 
-        return sum;
-
     }
+
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
